@@ -5,8 +5,15 @@ extends Node3D
 @export var time_scaled:bool = true
 @export var use_inertial:bool = true
 @export var gravity_scale:float = 1.0
+@export var body:Collider = null
 
 var move_vec:Vector3 = Vector3.ZERO
+
+static func arrow_to_quater(arrow:Vector3)->Vector3:
+	if abs(arrow.x) > abs(arrow.y):
+		return Vector3.RIGHT * arrow.x
+	else:
+		return Vector3.UP * arrow.y
 
 static func rot_to_vec(degree:float)->Vector3:
 	var vec:Vector3=Vector3.ZERO
@@ -47,3 +54,12 @@ func _process(_delta):
 	if use_inertial == false :
 		if gravity_scale == 0 : move_vec *= 0.0
 		else: move_vec *= Vector3.UP
+	if body != null:
+		for collision in body.hit_test_all():
+			var bounce:Vector3 = collision.point-body.get_pos_trans_index(collision.index)
+			var collision_width:float = bounce.length() - body.width
+			bounce=bounce.normalized() * collision_width
+			bounce=Entity.arrow_to_quater(bounce)
+			translate(bounce)
+			move_vec-=sign(bounce) * move_vec
+			

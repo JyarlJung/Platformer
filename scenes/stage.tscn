@@ -1,11 +1,14 @@
-[gd_scene load_steps=4 format=3 uid="uid://8731dfk04tof"]
+[gd_scene load_steps=5 format=3 uid="uid://8731dfk04tof"]
 
 [ext_resource type="Script" path="res://scripts/Collider.gd" id="1_13icl"]
 [ext_resource type="Script" path="res://scripts/Cha.gd" id="1_xh018"]
 
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_0v3pq"]
-width = 100
-height = 100
+[sub_resource type="Gradient" id="Gradient_8yhs2"]
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_b22sj"]
+gradient = SubResource("Gradient_8yhs2")
+width = 40
+height = 40
 
 [node name="Stage" type="Node3D"]
 
@@ -16,18 +19,39 @@ current = true
 size = 3.6
 far = 100.0
 
-[node name="Sprite3D" type="Sprite3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.413945, 0.216599, 0)
-texture = SubResource("NoiseTexture2D_0v3pq")
+[node name="Sprite3D" type="Sprite3D" parent="." node_paths=PackedStringArray("body")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.02765, 0.0754516, 0)
+texture = SubResource("GradientTexture2D_b22sj")
 script = ExtResource("1_xh018")
+use_inertial = false
+body = NodePath("Collider")
 
 [node name="Collider" type="Node3D" parent="Sprite3D" node_paths=PackedStringArray("root_node")]
 script = ExtResource("1_13icl")
 root_node = NodePath("..")
-points = Array[Vector3]([Vector3(0, 0, 0), Vector3(1, 0, 0), Vector3(1, 1, 0)])
-width = 0.1
+width = 0.2
+mask = 16
 
 [node name="Collider" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.625731, 0.10108, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.499033, -0.939195, 0)
 script = ExtResource("1_13icl")
-width = 1.0
+points = Array[Vector3]([Vector3(-1.5, 0, 0), Vector3(0, 0, 0)])
+width = 0.2
+layer = 16
+mask = 0
+
+[node name="Collider2" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00979427, -0.939195, 0)
+script = ExtResource("1_13icl")
+points = Array[Vector3]([Vector3(-1, 0, 0), Vector3(0, 0.5, 0)])
+width = 0.2
+layer = 16
+mask = 0
+
+[node name="Collider3" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0558205, -0.530075, 0)
+script = ExtResource("1_13icl")
+points = Array[Vector3]([Vector3(0, 0, 0), Vector3(2, -1, 0)])
+width = 0.2
+layer = 16
+mask = 0

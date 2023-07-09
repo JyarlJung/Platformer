@@ -2,7 +2,7 @@ class_name Global
 
 extends Node
 
-var is_draw_debug:bool = false
+var is_draw_debug:bool = true
 var gravity:float =0.2
 var time_scale:float=1.0
 
