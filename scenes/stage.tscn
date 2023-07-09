@@ -49,9 +49,9 @@ layer = 16
 mask = 0
 
 [node name="Collider3" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0558205, -0.530075, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.029172, -0.461549, 0)
 script = ExtResource("1_13icl")
-points = Array[Vector3]([Vector3(0, 0, 0), Vector3(2, -1, 0)])
+points = Array[Vector3]([Vector3(0, 0, 0), Vector3(2, -1, 0), Vector3(2, 0, 0)])
 width = 0.2
 layer = 16
 mask = 0

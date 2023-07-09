@@ -1,3 +1,4 @@
+@tool
 class_name Global
 
 extends Node
@@ -48,7 +49,7 @@ func _ready():
 
 
 func _process(_delta):
-	if is_draw_debug:
+	if is_draw_debug or Engine.is_editor_hint():
 		draw_debug()
 	_time_delta = _time_delta_fixed * time_scale
 	_time +=_time_delta
