@@ -3,14 +3,15 @@ class_name Global
 
 extends Node
 
+static var _time:float = 0.0
+static var _time_fixed:float = 0.0
+static var _time_delta:float = 0.0
+static var _time_delta_fixed:float = 0.0
+
 var is_draw_debug:bool = true
 var gravity:float =0.2
-var time_scale:float=1.0
+var time_scale:float=1
 
-var _time_delta:float = 0.0
-var _time_delta_fixed:float = 0.0
-var _time:float = 0.0
-var _time_fixed:float = 0.0
 var _debug_mesh:MeshInstance3D = MeshInstance3D.new()
 var _debug_material:StandardMaterial3D=StandardMaterial3D.new()
 
@@ -24,24 +25,39 @@ static func bit_flags_to_index(bit:int , max_size:int=32)-> PackedInt32Array:
 		bit=bit>>1
 	return res
 
-func get_time()->float:
+static func get_time()->float:
 	return _time
+	
+static func get_time_fixed()->float:
+	return _time_fixed
+	
+static func get_time_delta()->float:
+	return _time_delta
+	
+static func get_time_delta_fixed()->float:
+	return _time_delta_fixed
 
 func draw_debug()->void:
 	var mesh:ImmediateMesh = _debug_mesh.mesh as ImmediateMesh
 	mesh.clear_surfaces()
 	for collider in get_tree().get_nodes_in_group("Collider") as Array[Collider]:
-		if collider.get_segments().size() < 2: continue
 		mesh.surface_begin(Mesh.PRIMITIVE_LINE_STRIP,_debug_material)
-		for segment in collider.get_segments():
-			var color:Color = Color.BLUE if segment.enable else Color.RED
-			mesh.surface_set_color(color)
-			mesh.surface_add_vertex(collider.get_pos_trans(segment))
+		
+		mesh.surface_add_vertex(collider.get_pos_trans_index(0)+Vector3.UP*collider.width)
+		mesh.surface_add_vertex(collider.get_pos_trans_index(0)+Vector3.DOWN*collider.width)
+		
+		for seg in collider.get_segments():
+			mesh.surface_add_vertex(collider.get_pos_trans(seg))
+			
+		mesh.surface_add_vertex(collider.get_pos_trans_index(collider.get_segments().size()-1)+Vector3.UP*collider.width)
+		mesh.surface_add_vertex(collider.get_pos_trans_index(collider.get_segments().size()-1)+Vector3.DOWN*collider.width)
+		
 		mesh.surface_end()
 
 func _ready():
 	add_child(_debug_mesh)
 	_debug_mesh.mesh = ImmediateMesh.new()
+	_debug_mesh.sorting_offset=10
 	_debug_material.shading_mode=BaseMaterial3D.SHADING_MODE_UNSHADED
 	_debug_material.no_depth_test=true
 	_debug_material.depth_draw_mode=BaseMaterial3D.DEPTH_DRAW_DISABLED

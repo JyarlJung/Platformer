@@ -11,7 +11,6 @@ extends Node3D
 @export_range(0.0,100.0) var width:float=0
 @export_flags_3d_physics var layer:int=1
 @export_flags_3d_physics var mask:int=1
-@export var is_capped=true
 @export var _is_hull_rect=false
 
 var _segments:Array[Segment]
@@ -96,9 +95,9 @@ func _set_hull()-> void:
 		for seg in _segments:
 			if seg.enable:
 				if seg.pos.x-width < _hull.x: _hull.x = seg.pos.x-width
-				if seg.pos.x+width > _hull.z: _hull.z = seg.pos.x+width
+				elif seg.pos.x+width > _hull.z: _hull.z = seg.pos.x+width
 				if seg.pos.y-width < _hull.y: _hull.y = seg.pos.y-width
-				if seg.pos.y+width > _hull.w: _hull.w = seg.pos.y+width
+				elif seg.pos.y+width > _hull.w: _hull.w = seg.pos.y+width
 	else:
 		_hull=0.0
 		for seg in _segments:
@@ -131,16 +130,16 @@ func _intersect_hull(dest:Collider)-> bool:
 			dest_radius=_hull as float	
 		var dx:float = max(rect_pos.x+rect.x-dest_pos.x, dest_pos.x-(rect_pos.x+rect.z))
 		var dy:float = max(rect_pos.y+rect.y-dest_pos.y, dest_pos.y-(rect_pos.y+rect.w))
-		if dx >= 0 or dy >= 0:
+		if dx >= 0 and dy >= 0:
 			if sqrt(dx*dx + dy*dy) > dest_radius: return false
 	return true
 
-func _point_to_point(src_ind:int, dest:Collider, dest_ind:int)-> Collision: 
-	var src_point:Vector3 = get_pos_trans_index(src_ind)
+func _point_to_point(ind:int, dest:Collider, dest_ind:int)-> Collision: 
+	var src_point:Vector3 = get_pos_trans_index(ind)
 	var dest_point:Vector3 = dest.get_pos_trans_index(dest_ind)
 	var closet:Vector3 = dest_point-src_point
 	if closet.length() <= width + dest.width:
-		return Collider.Collision.new(src_ind, dest, dest_ind, closet - (closet-src_point).normalized()*dest.width)
+		return Collider.Collision.new(ind, dest, dest_ind, closet - closet.normalized()*dest.width)
 	else:
 		return null
 
@@ -148,12 +147,13 @@ func _point_to_segment(ind:int, dest:Collider, dest_ind:int)-> Collision:
 	if dest_ind == dest._segments.size()-1:
 		return _point_to_point(ind,dest,dest_ind)
 	else :
-		var closet:Vector3
 		var src_point:Vector3 = get_pos_trans_index(ind)
-		closet = Geometry3D.get_closest_point_to_segment(src_point, dest.get_pos_trans_index(dest_ind), dest.get_pos_trans_index(dest_ind+1) )
-		var distance:float = (closet-get_pos_trans_index(ind)).length()
-		if distance <= width + dest.width:
-			return Collider.Collision.new(ind, dest, dest_ind, closet - (closet-src_point).normalized()*dest.width)
+		var dest_point:Vector3 = dest.get_pos_trans_index(dest_ind) - src_point
+		var dest_point_end:Vector3 = dest.get_pos_trans_index(dest_ind+1) -src_point
+		var closet:Vector3 = Geometry3D.get_closest_point_to_segment(Vector3.ZERO, dest_point, dest_point_end)
+		
+		if closet.length() <= width + dest.width:
+			return Collider.Collision.new(ind, dest, dest_ind, closet - closet.normalized()*dest.width)
 		else :
 			return null
 			
@@ -162,16 +162,22 @@ func _segment_to_segment(ind:int, dest:Collider, dest_ind:int)-> Collision:
 		return _point_to_segment(ind,dest,dest_ind)
 	if dest_ind == dest._segments.size()-1:
 		return dest._point_to_segment(dest_ind,self,ind)
-	var array:PackedVector3Array = Geometry3D.get_closest_points_between_segments(get_pos_trans_index(ind), get_pos_trans_index(ind+1), dest.get_pos_trans_index(dest_ind), dest.get_pos_trans_index(dest_ind+1) )
+	
+	var src_point:Vector3 = get_pos_trans_index(ind)
+	var src_point_end:Vector3 = get_pos_trans_index(ind+1)
+	var dest_point:Vector3 = dest.get_pos_trans_index(dest_ind) - src_point
+	var dest_point_end:Vector3 = dest.get_pos_trans_index(dest_ind+1) -src_point
+	
+	var array:= Geometry3D.get_closest_points_between_segments(src_point, src_point_end, dest_point, dest_point_end)
 	var closet:Vector3 = array[1] - array[0]
 	var distance:float = closet.length()
 	if distance <= width + dest.width:
-		return Collider.Collision.new(ind, dest, dest_ind, array[0]+(closet - closet.normalized()*dest.width))
+		return Collider.Collision.new(ind, dest, dest_ind, closet - closet.normalized()*dest.width)
 	else :
 		return null
-
-#override func
-func _ready():
+		
+func _set_segment():
+	_segments.clear()
 	if points.size() == 0:
 		_segments.push_back(Segment.new())
 	else:
@@ -179,14 +185,25 @@ func _ready():
 			_segments.push_back(Segment.new(pos,true))
 	Collider.push_in_layer(self)
 	_set_hull()
+	
+#override func
+func _ready():
+	_set_segment()
 
 func _process(_delta):
+	if Engine.is_editor_hint():
+		if _segments.size() != points.size():
+			_set_segment()
 	if _flag_set_hull:
 		_set_hull()
 		_flag_set_hull=false
 
 func _exit_tree():
 	Collider.pop_from_layer(self)
+
+func _notification(what):
+	if what == 1:
+		Collider.pop_from_layer(self)
 
 #inner classes	
 class Segment:
