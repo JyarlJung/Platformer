@@ -19,6 +19,6 @@ func _process(delta):
 	if Input.is_key_pressed(KEY_LEFT):
 		if time_scaled_float(max_speed) > move_vec.dot(-slide_vector):
 			slide_x(-accel)
-	if Input.is_key_pressed(KEY_SPACE) and on_air:
+	if Input.is_key_pressed(KEY_SPACE) and on_air==false:
 		move_vec.y = time_scaled_float(jump_force)
 	super(delta)

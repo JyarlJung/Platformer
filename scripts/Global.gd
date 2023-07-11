@@ -10,7 +10,7 @@ static var _time_delta_fixed:float = 0.0
 
 var is_draw_debug:bool = true
 var gravity:float =0.2
-var time_scale:float=1
+var time_scale:float=0.1
 
 var _debug_mesh:MeshInstance3D = MeshInstance3D.new()
 var _debug_material:StandardMaterial3D=StandardMaterial3D.new()

@@ -138,7 +138,7 @@ func _point_to_point(ind:int, dest:Collider, dest_ind:int)-> Collision:
 	var src_point:Vector3 = get_pos_trans_index(ind)
 	var dest_point:Vector3 = dest.get_pos_trans_index(dest_ind)
 	var closet:Vector3 = dest_point-src_point
-	if closet.length() <= width + dest.width:
+	if closet.length() < width + dest.width:
 		return Collider.Collision.new(ind, dest, dest_ind, closet - closet.normalized()*dest.width)
 	else:
 		return null
@@ -152,7 +152,7 @@ func _point_to_segment(ind:int, dest:Collider, dest_ind:int)-> Collision:
 		var dest_point_end:Vector3 = dest.get_pos_trans_index(dest_ind+1) -src_point
 		var closet:Vector3 = Geometry3D.get_closest_point_to_segment(Vector3.ZERO, dest_point, dest_point_end)
 		
-		if closet.length() <= width + dest.width:
+		if closet.length() < width + dest.width:
 			return Collider.Collision.new(ind, dest, dest_ind, closet - closet.normalized()*dest.width)
 		else :
 			return null
@@ -171,7 +171,7 @@ func _segment_to_segment(ind:int, dest:Collider, dest_ind:int)-> Collision:
 	var array:= Geometry3D.get_closest_points_between_segments(src_point, src_point_end, dest_point, dest_point_end)
 	var closet:Vector3 = array[1] - array[0]
 	var distance:float = closet.length()
-	if distance <= width + dest.width:
+	if distance < width + dest.width:
 		return Collider.Collision.new(ind, dest, dest_ind, closet - closet.normalized()*dest.width)
 	else :
 		return null

@@ -15,10 +15,11 @@ var on_air:bool =true
 var slide_vector:Vector3
 
 static func arrow_to_quater(arrow:Vector3)->Vector3:
+	var length:float = pow(arrow.length(),2.0)
 	if abs(arrow.x) > abs(arrow.y):
-		return Vector3.RIGHT * pow(arrow.length(),2.0)/arrow.x
+		return Vector3.RIGHT * length/arrow.x
 	else:
-		return Vector3.UP * pow(arrow.length(),2.0)/arrow.y
+		return Vector3.UP * length/arrow.y
 
 static func rot_to_vec(degree:float)->Vector3:
 	var vec:Vector3=Vector3.ZERO
@@ -69,9 +70,8 @@ func scale_entity(vec:Vector3)->void:
 	scale_object_local(scale_vec)
 
 func _frict(value:float)->void:
-#	var friction_vector:Vector3 = time_scaled_vec(Vector3.LEFT * sign(move_vec.x) * value)
 	var friction_vector:Vector3 = time_scaled_vec(slide_vector * sign(move_vec.x) * value)
-	if abs(move_vec.x) * 2.0 < abs(friction_vector.x):
+	if abs(move_vec.x) < abs(friction_vector.x):
 		move_vec.x=0.0
 	elif abs(friction_vector.x) > abs(friction_vector.y):
 		move_vec-=friction_vector
@@ -87,32 +87,22 @@ func _process(_delta):
 		if gravity_scale == 0 : move_vec *= 0.0
 		else: move_vec *= Vector3.UP
 	if body != null:
-		on_air=false
+		on_air=true
 		slide_vector=Vector3.RIGHT
-		var friction_value:float = 0.0
-		var move_length = move_vec.length()
 		var bounce:Vector3
 		for collision in body.hit_test_all():
 			var bounce_arrow:Vector3 = collision.point.normalized()
 			var collision_width:float = collision.point.length() - body.width
 			bounce = bounce_arrow * collision_width
 			if abs(bounce_arrow.y)>abs(bounce_arrow.x) :
-				on_air=true
-				slide_vector = bounce_arrow.rotated(Vector3.BACK,PI*0.5)
-				
-#			if is_sticky: 
-#				bounce = arrow_to_quater(bounce)
-#				move_vec -= sign(abs(bounce)) * move_vec
-#			else:
-#				move_vec += bounce
+				on_air=false
 			if is_sticky:
 				translate(arrow_to_quater(bounce))
 			else:
 				translate(bounce)
-			if bounce.dot(move_vec) < 0 :
-				move_vec += bounce
 				
-		#move_vec += bounce
+			slide_vector = bounce_arrow.rotated(Vector3.BACK,PI*0.5)
+			move_vec += bounce
 		if friction > 0:
 			if is_friction_onair: _frict(friction)
 			elif on_air == false : _frict(friction)

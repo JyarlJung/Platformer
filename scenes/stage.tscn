@@ -31,7 +31,7 @@ size = 4.8
 far = 100.0
 
 [node name="Ball" type="Node3D" parent="." node_paths=PackedStringArray("body")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.84362, 1.01875, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.81451, 0.397831, 0)
 script = ExtResource("1_t1jm3")
 friction = 0.1
 body = NodePath("Collider")
@@ -47,7 +47,7 @@ mask = 16
 mesh = SubResource("SphereMesh_k3pov")
 
 [node name="Cha" type="Node3D" parent="." node_paths=PackedStringArray("body")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.61406, -0.987488, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.42796, -0.308809, 0)
 script = ExtResource("1_xh018")
 friction = 0.3
 is_friction_onair = true
@@ -111,8 +111,56 @@ _is_hull_rect = true
 [node name="Collider6" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3349, -0.925373, 0)
 script = ExtResource("1_13icl")
-points = Array[Vector3]([Vector3(0, -0.5, 0), Vector3(0, 0.5, 0)])
+points = Array[Vector3]([Vector3(0, -0.5, 0), Vector3(0, 1, 0)])
 width = 0.2
 layer = 16
 mask = 0
 _is_hull_rect = true
+
+[node name="Ball2" type="Node3D" parent="." node_paths=PackedStringArray("body")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.86746, 1.26904, 0)
+script = ExtResource("1_t1jm3")
+friction = 0.1
+body = NodePath("Collider")
+
+[node name="Collider" type="Node3D" parent="Ball2" node_paths=PackedStringArray("root_node")]
+script = ExtResource("1_13icl")
+root_node = NodePath("..")
+width = 0.2
+layer = 17
+mask = 16
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Ball2"]
+mesh = SubResource("SphereMesh_k3pov")
+
+[node name="Ball3" type="Node3D" parent="." node_paths=PackedStringArray("body")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.33799, 0.137911, 0)
+script = ExtResource("1_t1jm3")
+friction = 0.1
+body = NodePath("Collider")
+
+[node name="Collider" type="Node3D" parent="Ball3" node_paths=PackedStringArray("root_node")]
+script = ExtResource("1_13icl")
+root_node = NodePath("..")
+width = 0.2
+layer = 17
+mask = 16
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Ball3"]
+mesh = SubResource("SphereMesh_k3pov")
+
+[node name="Ball4" type="Node3D" parent="." node_paths=PackedStringArray("body")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.39094, 0.980244, 0)
+script = ExtResource("1_t1jm3")
+friction = 0.1
+body = NodePath("Collider")
+
+[node name="Collider" type="Node3D" parent="Ball4" node_paths=PackedStringArray("root_node")]
+script = ExtResource("1_13icl")
+root_node = NodePath("..")
+width = 0.2
+layer = 17
+mask = 16
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Ball4"]
+mesh = SubResource("SphereMesh_k3pov")
