@@ -16,9 +16,9 @@ var slide_vector:Vector3
 
 static func arrow_to_quater(arrow:Vector3)->Vector3:
 	if abs(arrow.x) > abs(arrow.y):
-		return Vector3.RIGHT * (arrow.x + abs(arrow.y))
+		return Vector3.RIGHT * pow(arrow.length(),2.0)/arrow.x
 	else:
-		return Vector3.UP * (arrow.y + abs(arrow.x))
+		return Vector3.UP * pow(arrow.length(),2.0)/arrow.y
 
 static func rot_to_vec(degree:float)->Vector3:
 	var vec:Vector3=Vector3.ZERO
@@ -33,7 +33,8 @@ func move_forward(speed:float)->void:
 	move(Entity.rot_to_vec(global_rotation_degrees.z) * speed)
 
 func slide_x(speed:float)->void:
-	move(slide_vector * speed)
+	if abs(slide_vector.x) > abs(slide_vector.y):
+		move(slide_vector * speed)
 
 func time_scaled_vec(vec:Vector3)->Vector3:
 	var scaled:float
@@ -68,11 +69,12 @@ func scale_entity(vec:Vector3)->void:
 	scale_object_local(scale_vec)
 
 func _frict(value:float)->void:
-	var friction_vector:Vector3 = time_scaled_vec(Vector3.LEFT * sign(move_vec.x) * value)
-	if abs(move_vec.x) < abs(friction_vector.x):
+#	var friction_vector:Vector3 = time_scaled_vec(Vector3.LEFT * sign(move_vec.x) * value)
+	var friction_vector:Vector3 = time_scaled_vec(slide_vector * sign(move_vec.x) * value)
+	if abs(move_vec.x) * 2.0 < abs(friction_vector.x):
 		move_vec.x=0.0
-	else:
-		move_vec+=friction_vector
+	elif abs(friction_vector.x) > abs(friction_vector.y):
+		move_vec-=friction_vector
 
 func _ready():
 	pass
@@ -98,14 +100,19 @@ func _process(_delta):
 				on_air=true
 				slide_vector = bounce_arrow.rotated(Vector3.BACK,PI*0.5)
 				
-			if is_sticky: bounce = arrow_to_quater(bounce)
-			translate(bounce)
-			if is_sticky : 
-				friction_value = friction
-			else :
-				friction_value = friction * bounce.normalized().y
+#			if is_sticky: 
+#				bounce = arrow_to_quater(bounce)
+#				move_vec -= sign(abs(bounce)) * move_vec
+#			else:
+#				move_vec += bounce
+			if is_sticky:
+				translate(arrow_to_quater(bounce))
+			else:
+				translate(bounce)
+			if bounce.dot(move_vec) < 0 :
+				move_vec += bounce
 				
-		move_vec += bounce
+		#move_vec += bounce
 		if friction > 0:
 			if is_friction_onair: _frict(friction)
-			else : _frict(friction_value)
+			elif on_air == false : _frict(friction)

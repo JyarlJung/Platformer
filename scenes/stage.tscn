@@ -49,7 +49,7 @@ mesh = SubResource("SphereMesh_k3pov")
 [node name="Cha" type="Node3D" parent="." node_paths=PackedStringArray("body")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.61406, -0.987488, 0)
 script = ExtResource("1_xh018")
-friction = 0.1
+friction = 0.3
 is_friction_onair = true
 is_sticky = true
 body = NodePath("Collider")
