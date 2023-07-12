@@ -7,10 +7,10 @@ static var _time:float = 0.0
 static var _time_fixed:float = 0.0
 static var _time_delta:float = 0.0
 static var _time_delta_fixed:float = 0.0
+static var time_scale:float=1.0
 
 var is_draw_debug:bool = true
-var gravity:float =0.2
-var time_scale:float=0.1
+static var gravity:float =0.15
 
 var _debug_mesh:MeshInstance3D = MeshInstance3D.new()
 var _debug_material:StandardMaterial3D=StandardMaterial3D.new()
@@ -36,6 +36,11 @@ static func get_time_delta()->float:
 	
 static func get_time_delta_fixed()->float:
 	return _time_delta_fixed
+	
+static func set_time_scale(value:float)->float:
+	value = clamp(value,0.0,4.0)
+	time_scale=value
+	return value
 
 func draw_debug()->void:
 	var mesh:ImmediateMesh = _debug_mesh.mesh as ImmediateMesh

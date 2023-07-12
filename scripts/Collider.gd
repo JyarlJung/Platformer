@@ -64,13 +64,13 @@ func hit_test_first(layer_mask:int=-1)-> Collision:
 	return null
 	
 func hit_test_all(layer_mask:int=-1)-> Array[Collision]:
-	var res:Array[Collision] = []
+	var res:Array[Collision]
 	if layer_mask==-1: layer_mask=mask
 	else: layer_mask = 1 << layer_mask
 	
 	for i in Global.bit_flags_to_index(layer_mask):
-		for collider in get_tree().get_nodes_in_group(_LAYER_NAMES[i]):
-			if collider == self || collider.visible == false: continue
+		for collider in get_tree().get_nodes_in_group(_LAYER_NAMES[i]) as Array[Collider]:
+			if collider == self or collider.is_visible_in_tree() == false: continue
 			var hit = hit_test(collider)
 			if hit != null: res.push_back(hit)	
 	return res
