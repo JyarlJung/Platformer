@@ -1,5 +1,6 @@
-[gd_scene load_steps=5 format=3 uid="uid://8731dfk04tof"]
+[gd_scene load_steps=6 format=3 uid="uid://8731dfk04tof"]
 
+[ext_resource type="Script" path="res://scripts/Camera.gd" id="1_0nirm"]
 [ext_resource type="Script" path="res://scripts/Collider.gd" id="1_13icl"]
 [ext_resource type="Script" path="res://scripts/Cha.gd" id="1_xh018"]
 
@@ -15,22 +16,27 @@ rings = 4
 
 [node name="Stage" type="Node3D"]
 
-[node name="Camera3D" type="Camera3D" parent="."]
+[node name="Camera3D" type="Camera3D" parent="." node_paths=PackedStringArray("follow_node")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1)
 keep_aspect = 0
 projection = 1
 current = true
 size = 4.8
 far = 100.0
+script = ExtResource("1_0nirm")
+follow_node = NodePath("../Cha")
+node_position = Vector3(0, 0.6, 1)
 
 [node name="Cha" type="Node3D" parent="." node_paths=PackedStringArray("arrow", "body")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.329448, 1.3863, 0)
 script = ExtResource("1_xh018")
-max_speed = 2.5
-jump_force = 4.5
+accel = 0.6
+max_speed = 2.0
+jump_force = 4.0
 arrow = NodePath("Collider2")
 friction = 0.3
 is_friction_onair = true
+is_sticky = true
 body = NodePath("Collider")
 
 [node name="Collider" type="Node3D" parent="Cha"]
@@ -57,9 +63,9 @@ mask = 0
 _is_hull_rect = true
 
 [node name="Collider2" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.0726, -2.027, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.74033, -2.34889, 0)
 script = ExtResource("1_13icl")
-points = Array[Vector3]([Vector3(0.5, 0.5, 0), Vector3(-0.5, 1.6, 0)])
+points = Array[Vector3]([Vector3(0, 0.5, 0), Vector3(1, 2.5, 0)])
 width = 0.01
 layer = 16
 mask = 0

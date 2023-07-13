@@ -34,8 +34,10 @@ func move_forward(speed:float)->void:
 	move(Entity.rot_to_vec(global_rotation_degrees.z) * speed)
 
 func slide(speed:float)->void:
-	if abs(slide_vector.y) < 0.7 or speed*slide_vector.y <= 0:
+	if slide_vector.x > 0.7:
 		move(slide_vector * speed)
+	elif speed*slide_vector.y <= 0:
+		move(Vector3.RIGHT * speed)
 
 func get_time_delta()->float:
 	if time_scaled: return Global.get_time_delta()
@@ -68,24 +70,24 @@ func jump(power:float)->void:
 	move_vec.x+=jump_vec.x
 
 func _frict(value:float)->void:
+	if abs(slide_vector.x) < 0.7 : return
 	var friction_vector:Vector3 = slide_vector * sign(move_vec.x)
-	friction_vector *= value * get_time_scale()
-	if abs(move_vec.x) < abs(friction_vector.x):
+	friction_vector *= value * abs(slide_vector.x)
+	if abs(move_vec.x) < abs(friction_vector.x) * get_time_scale():
 		move_vec.x=0.0
-	else:
-		move_vec-=friction_vector * abs(slide_vector.x)
+	else :
+		move(-friction_vector)
 
 func _collide(collision:Collider.Collision)->void:
 	var bounce_arrow:Vector3 = collision.point.normalized()
 	var collision_width:float = min(collision.point.length() - body.width, move_vec.length())
 	var bounce:Vector3 = bounce_arrow * collision_width
-	var is_ground:bool = bounce_arrow.y < -0.7
-	if bounce_arrow.y < 0 :
+	if bounce_arrow.y < -0.7 :
 		on_air=false
 		slide_vector = bounce_arrow
-	elif abs(bounce_arrow.x) < abs(slide_vector.x):
+	elif abs(slide_vector.y) <= abs(bounce_arrow.y):
 		slide_vector = bounce_arrow
-	if is_sticky and is_ground:
+	if is_sticky and bounce_arrow.y < -0.7 :
 		translate(Entity.arrow_to_quater(bounce))
 	else:
 		translate(bounce)
@@ -95,7 +97,7 @@ func _colide_and_slide()->void:
 	on_air=true
 	slide_vector=Vector3.RIGHT
 	var hit:Array[Collider.Collision] = body.hit_test_all()
-	for collision in body.hit_test_all():
+	for collision in hit:
 		_collide(collision)
 	if hit.size() != 0:
 		slide_vector=slide_vector.cross(Vector3.FORWARD)
