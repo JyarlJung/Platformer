@@ -64,7 +64,7 @@ func hit_test_first(layer_mask:int=-1)-> Collision:
 	return null
 	
 func hit_test_all(layer_mask:int=-1)-> Array[Collision]:
-	var res:Array[Collision]
+	var res:Array[Collision]=[]
 	if layer_mask==-1: layer_mask=mask
 	else: layer_mask = 1 << layer_mask
 	
@@ -82,6 +82,9 @@ func get_pos_trans(collider:Segment)->Vector3:
 	var pos_transed=collider.pos.rotated(Vector3.BACK,global_rotation.z)
 	pos_transed+=global_position
 	return pos_transed
+
+func set_pos_index(index:int,pos:Vector3)->void:
+	_segments[index].pos=pos
 
 func get_pos_trans_index(index:int)->Vector3:
 	var pos_transed=_segments[index].pos.rotated(Vector3.BACK,global_rotation.z)

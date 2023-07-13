@@ -34,7 +34,7 @@ func move_forward(speed:float)->void:
 	move(Entity.rot_to_vec(global_rotation_degrees.z) * speed)
 
 func slide(speed:float)->void:
-	if abs(slide_vector.y) < 0.5:
+	if abs(slide_vector.y) < 0.7 or speed*slide_vector.y <= 0:
 		move(slide_vector * speed)
 
 func get_time_delta()->float:
@@ -62,28 +62,45 @@ func scl(vec:Vector3)->void:
 	else: scale_vec = vec
 	scale_object_local(scale_vec)
 
+func jump(power:float)->void:
+	var jump_vec:Vector3 = slide_vector.cross(Vector3.FORWARD) * power
+	move_vec.y=jump_vec.y
+	move_vec.x+=jump_vec.x
+
 func _frict(value:float)->void:
 	var friction_vector:Vector3 = slide_vector * sign(move_vec.x)
 	friction_vector *= value * get_time_scale()
 	if abs(move_vec.x) < abs(friction_vector.x):
 		move_vec.x=0.0
-	elif abs(friction_vector.x) > abs(friction_vector.y):
-		move_vec-=friction_vector
+	else:
+		move_vec-=friction_vector * abs(slide_vector.x)
 
 func _collide(collision:Collider.Collision)->void:
 	var bounce_arrow:Vector3 = collision.point.normalized()
 	var collision_width:float = min(collision.point.length() - body.width, move_vec.length())
 	var bounce:Vector3 = bounce_arrow * collision_width
-	if bounce_arrow.y < -0.5 :
+	var is_ground:bool = bounce_arrow.y < -0.7
+	if bounce_arrow.y < 0 :
 		on_air=false
 		slide_vector = bounce_arrow
-	elif bounce_arrow.y < abs(slide_vector.y):
+	elif abs(bounce_arrow.x) < abs(slide_vector.x):
 		slide_vector = bounce_arrow
-	if is_sticky:
+	if is_sticky and is_ground:
 		translate(Entity.arrow_to_quater(bounce))
 	else:
 		translate(bounce)
 	move_vec += bounce / get_time_delta()
+
+func _colide_and_slide()->void:
+	on_air=true
+	slide_vector=Vector3.RIGHT
+	var hit:Array[Collider.Collision] = body.hit_test_all()
+	for collision in body.hit_test_all():
+		_collide(collision)
+	if hit.size() != 0:
+		slide_vector=slide_vector.cross(Vector3.FORWARD)
+
+
 func _ready():
 	pass
 
@@ -92,11 +109,7 @@ func _process(_delta):
 	trans(move_vec)
 	move(Vector3.DOWN * Global.gravity)
 	if body != null:
-		on_air=true
-		slide_vector=Vector3.DOWN
-		for collision in body.hit_test_all():
-			_collide(collision)
-		slide_vector=slide_vector.cross(Vector3.FORWARD)
+		_colide_and_slide()
 	if friction < 0 :
 		if gravity_scale == 0 : move_vec *= 0.0
 		else: move_vec *= Vector3.UP

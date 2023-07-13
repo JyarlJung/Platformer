@@ -5,6 +5,7 @@ extends Entity
 @export_range(0.0,2.0,0.01) var accel:float = 0.5
 @export var max_speed:float = 3.0
 @export var jump_force:float = 5.0
+@export var arrow:Collider
 
 
 
@@ -22,8 +23,9 @@ func _process(delta):
 		if max_speed > move_vec.dot(-slide_vector):
 			slide(-accel)
 	if Input.is_key_pressed(KEY_SPACE) and on_air==false:
-		move_vec.y = jump_force
-	
+		jump(jump_force)
+	if arrow != null:
+		arrow.set_pos_index(1,slide_vector)
 	if Input.is_key_pressed(KEY_SHIFT):
 		Global.set_time_scale(max(0.2,get_time_scale()-0.1))
 	else:
