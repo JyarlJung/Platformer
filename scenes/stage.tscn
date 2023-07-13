@@ -9,8 +9,8 @@ albedo_color = Color(1, 0, 0, 1)
 
 [sub_resource type="SphereMesh" id="SphereMesh_pbyeq"]
 material = SubResource("StandardMaterial3D_j3q2q")
-radius = 0.2
-height = 0.4
+radius = 0.16
+height = 0.32
 radial_segments = 8
 rings = 4
 
@@ -27,13 +27,12 @@ script = ExtResource("1_0nirm")
 follow_node = NodePath("../Cha")
 node_position = Vector3(0, 0.6, 1)
 
-[node name="Cha" type="Node3D" parent="." node_paths=PackedStringArray("arrow", "body")]
+[node name="Cha" type="Node3D" parent="." node_paths=PackedStringArray("body")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.329448, 1.3863, 0)
 script = ExtResource("1_xh018")
 accel = 0.6
 max_speed = 2.0
 jump_force = 4.0
-arrow = NodePath("Collider2")
 friction = 0.3
 is_friction_onair = true
 is_sticky = true
@@ -41,18 +40,12 @@ body = NodePath("Collider")
 
 [node name="Collider" type="Node3D" parent="Cha"]
 script = ExtResource("1_13icl")
-width = 0.2
+width = 0.16
 layer = 17
 mask = 16
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Cha"]
 mesh = SubResource("SphereMesh_pbyeq")
-
-[node name="Collider2" type="Node3D" parent="Cha"]
-script = ExtResource("1_13icl")
-points = Array[Vector3]([Vector3(0, 0, 0), Vector3(1, 0, 0)])
-layer = 4
-mask = 0
 
 [node name="Collider" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.379026, -1.46014, 0)
@@ -63,18 +56,9 @@ mask = 0
 _is_hull_rect = true
 
 [node name="Collider2" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.74033, -2.34889, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.904458, -3.10169, 0)
 script = ExtResource("1_13icl")
 points = Array[Vector3]([Vector3(0, 0.5, 0), Vector3(1, 2.5, 0)])
-width = 0.01
-layer = 16
-mask = 0
-_is_hull_rect = true
-
-[node name="Collider3" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.175429, -0.18912, 0)
-script = ExtResource("1_13icl")
-points = Array[Vector3]([Vector3(0.5, 0.5, 0), Vector3(-0.5, 0.5, 0), Vector3(-0.5, -0.5, 0), Vector3(0.5, -0.5, 0)])
 width = 0.01
 layer = 16
 mask = 0

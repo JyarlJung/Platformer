@@ -34,7 +34,7 @@ func move_forward(speed:float)->void:
 	move(Entity.rot_to_vec(global_rotation_degrees.z) * speed)
 
 func slide(speed:float)->void:
-	if slide_vector.x > 0.7:
+	if on_air == false:
 		move(slide_vector * speed)
 	elif speed*slide_vector.y <= 0:
 		move(Vector3.RIGHT * speed)
@@ -116,5 +116,5 @@ func _process(_delta):
 		if gravity_scale == 0 : move_vec *= 0.0
 		else: move_vec *= Vector3.UP
 	else:
-		if is_friction_onair: _frict(friction)
-		elif on_air == false : _frict(friction)
+		if is_friction_onair or on_air == false: 
+			_frict(friction)

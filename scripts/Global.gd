@@ -8,7 +8,7 @@ static var _time_fixed:float = 0.0
 static var _time_delta:float = 0.0
 static var _time_delta_fixed:float = 0.0
 static var time_scale:float=1.0
-
+static var camera:Camera3D
 var is_draw_debug:bool = true
 static var gravity:float =0.15
 
@@ -42,6 +42,18 @@ static func set_time_scale(value:float)->float:
 	time_scale=value
 	return value
 
+func timer(time:float, scaled=true)->void:
+	if scaled:
+		var start_time:float = _time
+		while start_time+time > _time: 
+			await get_tree().process_frame	
+		return
+	else:
+		var start_time:float = _time_fixed
+		while start_time+time > _time_fixed: 
+			await get_tree().process_frame	
+		return		
+
 func draw_debug()->void:
 	var mesh:ImmediateMesh = _debug_mesh.mesh as ImmediateMesh
 	mesh.clear_surfaces()
@@ -67,6 +79,7 @@ func _ready():
 	_debug_material.no_depth_test=true
 	_debug_material.depth_draw_mode=BaseMaterial3D.DEPTH_DRAW_DISABLED
 	_time_delta_fixed = 1.0/Engine.max_fps
+	camera=get_viewport().get_camera_3d()
 
 
 func _process(_delta):
@@ -74,4 +87,4 @@ func _process(_delta):
 		draw_debug()
 	_time_delta = _time_delta_fixed * time_scale
 	_time +=_time_delta
-	_time_fixed = _time_delta_fixed
+	_time_fixed += _time_delta_fixed

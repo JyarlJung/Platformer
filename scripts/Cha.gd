@@ -5,7 +5,6 @@ extends Entity
 @export_range(0.0,2.0,0.01) var accel:float = 0.5
 @export var max_speed:float = 3.0
 @export var jump_force:float = 5.0
-@export var arrow:Collider
 
 
 
@@ -17,15 +16,15 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	if Input.is_key_pressed(KEY_RIGHT):
-		if max_speed > move_vec.dot(slide_vector):
-			slide(accel)
+		var speed = max_speed-move_vec.dot(slide_vector)
+		slide(clamp(speed,0.0,accel))
 	if Input.is_key_pressed(KEY_LEFT):
-		if max_speed > move_vec.dot(-slide_vector):
-			slide(-accel)
+		var speed = max_speed+move_vec.dot(slide_vector)
+		slide(-clamp(speed,0.0,accel))
 	if Input.is_key_pressed(KEY_SPACE) and on_air==false:
 		jump(jump_force)
-	if arrow != null:
-		arrow.set_pos_index(1,slide_vector)
+		var camera:Camera = Global.camera as Camera
+		camera.shake(Vector3.DOWN * 0.05)
 	if Input.is_key_pressed(KEY_SHIFT):
 		Global.set_time_scale(max(0.2,get_time_scale()-0.1))
 	else:
