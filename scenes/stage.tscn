@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://8731dfk04tof"]
+[gd_scene load_steps=7 format=3 uid="uid://8731dfk04tof"]
 
 [ext_resource type="Script" path="res://scripts/Camera.gd" id="1_0nirm"]
 [ext_resource type="Script" path="res://scripts/Collider.gd" id="1_13icl"]
 [ext_resource type="Script" path="res://scripts/Cha.gd" id="1_xh018"]
+[ext_resource type="FontFile" uid="uid://b18jhoc4yhnm8" path="res://fonts/GalmuriMono7.ttf" id="4_ihlrg"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_j3q2q"]
 albedo_color = Color(1, 0, 0, 1)
@@ -44,6 +45,15 @@ mask = 16
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Cha"]
 mesh = SubResource("SphereMesh_pbyeq")
+
+[node name="Label3D" type="Label3D" parent="Cha"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
+pixel_size = 0.01
+texture_filter = 0
+text = "dgsiii1234"
+font = ExtResource("4_ihlrg")
+font_size = 8
+outline_size = 3
 
 [node name="Collider" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.379026, -1.46014, 0)
