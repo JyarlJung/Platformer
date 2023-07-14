@@ -4,7 +4,6 @@ extends Camera3D
 
 @export var follow_node:Node3D
 @export var follow_power:float=3.0
-@export var node_position:Vector3=Vector3.BACK
 
 var _shake_vector:Vector3=Vector3.ZERO
 @onready var _pos_origin:Vector3 = self.global_position
@@ -26,8 +25,8 @@ func _ready():
 
 func _process(_delta):
 	if follow_node != null:
-		var move_vec:Vector3=follow_node.global_position+node_position
-		move_vec = move_vec-_pos_origin
+		var move_vec:Vector3=follow_node.global_position
+		move_vec = move_vec-_pos_origin + Vector3.BACK
 		move_vec *= Global.get_time_delta() * 3.0
 		_pos_origin += move_vec
 		global_position=_pos_origin + _shake_vector
