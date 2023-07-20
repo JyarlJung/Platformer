@@ -1,15 +1,16 @@
-[gd_scene load_steps=7 format=3 uid="uid://8731dfk04tof"]
+[gd_scene load_steps=8 format=3 uid="uid://8731dfk04tof"]
 
 [ext_resource type="Script" path="res://scripts/Camera.gd" id="1_0nirm"]
 [ext_resource type="Script" path="res://scripts/Collider.gd" id="1_13icl"]
-[ext_resource type="Script" path="res://scripts/Cha.gd" id="1_xh018"]
+[ext_resource type="Script" path="res://scripts/Cha/Cha.gd" id="2_q1gmk"]
 [ext_resource type="FontFile" uid="uid://b18jhoc4yhnm8" path="res://fonts/GalmuriMono7.ttf" id="4_ihlrg"]
+[ext_resource type="Script" path="res://scripts/Entity.gd" id="5_f6uqg"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_j3q2q"]
-albedo_color = Color(1, 0, 0, 1)
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_aytoa"]
+albedo_color = Color(0.964706, 0, 0, 1)
 
 [sub_resource type="SphereMesh" id="SphereMesh_pbyeq"]
-material = SubResource("StandardMaterial3D_j3q2q")
+material = SubResource("StandardMaterial3D_aytoa")
 radius = 0.16
 height = 0.32
 radial_segments = 8
@@ -27,11 +28,13 @@ far = 100.0
 script = ExtResource("1_0nirm")
 follow_node = NodePath("../Cha")
 
-[node name="Cha" type="Node3D" parent="." node_paths=PackedStringArray("body")]
-script = ExtResource("1_xh018")
+[node name="Cha" type="Node3D" parent="." node_paths=PackedStringArray("state_text", "body")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.11469, -0.847793, 0)
+script = ExtResource("2_q1gmk")
 accel = 0.6
 max_speed = 2.0
 jump_force = 4.0
+state_text = NodePath("Label3D")
 friction = 0.3
 is_friction_onair = true
 is_sticky = true
@@ -50,7 +53,7 @@ mesh = SubResource("SphereMesh_pbyeq")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
 pixel_size = 0.01
 texture_filter = 0
-text = "dgsiii1234"
+text = "dgsiii1234hhhhhhhhhhh"
 font = ExtResource("4_ihlrg")
 font_size = 8
 outline_size = 3
@@ -71,3 +74,35 @@ width = 0.01
 layer = 16
 mask = 0
 _is_hull_rect = true
+
+[node name="Entity" type="Node3D" parent="." node_paths=PackedStringArray("body")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.999558, -0.481463, 0)
+script = ExtResource("5_f6uqg")
+friction = 0.15
+body = NodePath("Collider")
+
+[node name="Collider" type="Node3D" parent="Entity" node_paths=PackedStringArray("root_node")]
+script = ExtResource("1_13icl")
+root_node = NodePath("..")
+width = 0.16
+layer = 17
+mask = 16
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Entity"]
+mesh = SubResource("SphereMesh_pbyeq")
+
+[node name="Entity2" type="Node3D" parent="." node_paths=PackedStringArray("body")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.01002, 0.120364, 0)
+script = ExtResource("5_f6uqg")
+friction = 0.15
+body = NodePath("Collider")
+
+[node name="Collider" type="Node3D" parent="Entity2" node_paths=PackedStringArray("root_node")]
+script = ExtResource("1_13icl")
+root_node = NodePath("..")
+width = 0.16
+layer = 17
+mask = 16
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Entity2"]
+mesh = SubResource("SphereMesh_pbyeq")

@@ -5,6 +5,7 @@ extends Camera3D
 @export var follow_node:Node3D
 @export var follow_power:float=3.0
 
+
 var _shake_vector:Vector3=Vector3.ZERO
 @onready var _pos_origin:Vector3 = self.global_position
 
