@@ -1,9 +1,8 @@
-[gd_scene load_steps=8 format=3 uid="uid://8731dfk04tof"]
+[gd_scene load_steps=7 format=3 uid="uid://8731dfk04tof"]
 
 [ext_resource type="Script" path="res://scripts/Camera.gd" id="1_0nirm"]
 [ext_resource type="Script" path="res://scripts/Collider.gd" id="1_13icl"]
-[ext_resource type="Script" path="res://scripts/Cha/Cha.gd" id="2_q1gmk"]
-[ext_resource type="FontFile" uid="uid://b18jhoc4yhnm8" path="res://fonts/GalmuriMono7.ttf" id="4_ihlrg"]
+[ext_resource type="PackedScene" uid="uid://cq8jsn6awj30r" path="res://prescenes/cha.tscn" id="2_7trmc"]
 [ext_resource type="Script" path="res://scripts/Entity.gd" id="5_f6uqg"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_aytoa"]
@@ -28,35 +27,7 @@ far = 100.0
 script = ExtResource("1_0nirm")
 follow_node = NodePath("../Cha")
 
-[node name="Cha" type="Node3D" parent="." node_paths=PackedStringArray("state_text", "body")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.11469, -0.847793, 0)
-script = ExtResource("2_q1gmk")
-accel = 0.6
-max_speed = 2.0
-jump_force = 4.0
-state_text = NodePath("Label3D")
-friction = 0.3
-is_friction_onair = true
-is_sticky = true
-body = NodePath("Collider")
-
-[node name="Collider" type="Node3D" parent="Cha"]
-script = ExtResource("1_13icl")
-width = 0.16
-layer = 17
-mask = 16
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Cha"]
-mesh = SubResource("SphereMesh_pbyeq")
-
-[node name="Label3D" type="Label3D" parent="Cha"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
-pixel_size = 0.01
-texture_filter = 0
-text = "dgsiii1234hhhhhhhhhhh"
-font = ExtResource("4_ihlrg")
-font_size = 8
-outline_size = 3
+[node name="Cha" parent="." instance=ExtResource("2_7trmc")]
 
 [node name="Collider" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.379026, -1.46014, 0)

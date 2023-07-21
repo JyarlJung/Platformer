@@ -1,0 +1,44 @@
+[gd_scene load_steps=6 format=3 uid="uid://cq8jsn6awj30r"]
+
+[ext_resource type="Script" path="res://scripts/Cha/Cha.gd" id="1_rq267"]
+[ext_resource type="Script" path="res://scripts/Collider.gd" id="2_vv4gc"]
+[ext_resource type="FontFile" uid="uid://b18jhoc4yhnm8" path="res://fonts/GalmuriMono7.ttf" id="3_yi1ev"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_aytoa"]
+albedo_color = Color(0.964706, 0, 0, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_pbyeq"]
+material = SubResource("StandardMaterial3D_aytoa")
+radius = 0.16
+height = 0.32
+radial_segments = 8
+rings = 4
+
+[node name="Cha" type="Node3D" node_paths=PackedStringArray("state_text", "body")]
+script = ExtResource("1_rq267")
+accel = 0.6
+max_speed = 2.0
+jump_force = 4.0
+state_text = NodePath("Label3D")
+friction = 0.3
+is_friction_onair = true
+is_sticky = true
+body = NodePath("Collider")
+
+[node name="Collider" type="Node3D" parent="."]
+script = ExtResource("2_vv4gc")
+width = 0.16
+layer = 17
+mask = 16
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("SphereMesh_pbyeq")
+
+[node name="Label3D" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
+pixel_size = 0.01
+texture_filter = 0
+text = "dgsiii1234hhhhhhhhhhh"
+font = ExtResource("3_yi1ev")
+font_size = 8
+outline_size = 3
